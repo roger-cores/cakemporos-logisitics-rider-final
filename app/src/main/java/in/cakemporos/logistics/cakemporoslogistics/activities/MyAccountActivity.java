@@ -1,5 +1,7 @@
 package in.cakemporos.logistics.cakemporoslogistics.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,11 +12,12 @@ import android.widget.Toast;
 
 import in.cakemporos.logistics.cakemporoslogistics.R;
 import in.cakemporos.logistics.cakemporoslogistics.events.OnWebServiceCallDoneEventListener;
-import in.cakemporos.logistics.cakemporoslogistics.utilities.Factory;
 import in.cakemporos.logistics.cakemporoslogistics.web.endpoints.AuthenticationEndPoint;
 import in.cakemporos.logistics.cakemporoslogistics.web.services.AuthenticationService;
-import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.UserInfo;
+import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.entities.Baker;
+import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.entities.Rider;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static in.cakemporos.logistics.cakemporoslogistics.utilities.FlashMessage.displayContingencyError;
 import static in.cakemporos.logistics.cakemporoslogistics.utilities.FlashMessage.displayError;
@@ -23,9 +26,9 @@ import static in.cakemporos.logistics.cakemporoslogistics.utilities.FlashMessage
 /**
  * Created by maitr on 14-Aug-16.
  */
-public class MyAccountActivity extends AppCompatActivity implements OnWebServiceCallDoneEventListener{
+public class MyAccountActivity extends AppCompatActivity implements OnWebServiceCallDoneEventListener {
     private ImageButton home;
-    private TextView user_name_ma,phone_ma, vehicle_number_ma;
+    private TextView email_baker,address_baker,phone_baker;
     private Retrofit retrofit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +36,9 @@ public class MyAccountActivity extends AppCompatActivity implements OnWebService
         setContentView(R.layout.activity_my_account);
         //find views
         home=(ImageButton)findViewById(R.id.home_img_button_my_account);
-        user_name_ma= (TextView) findViewById(R.id.user_name_ma);
-        phone_ma=(TextView) findViewById(R.id.phone_no_ma);
-        vehicle_number_ma =(TextView) findViewById(R.id.address_ma);
+        email_baker=(TextView)findViewById(R.id.email_baker_ma);
+        address_baker=(TextView)findViewById(R.id.address_baker_ma);
+        phone_baker=(TextView)findViewById(R.id.phone_baker_ma);
         //onclick
         home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,29 +47,35 @@ public class MyAccountActivity extends AppCompatActivity implements OnWebService
             }
         });
 
+        retrofit=new Retrofit.Builder()
+                .baseUrl(getResources().getString(R.string.base_url))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        retrofit = Factory.createClient(getString(R.string.base_url));
         AuthenticationEndPoint endPoint = retrofit.create(AuthenticationEndPoint.class);
-        AuthenticationService.getUserInfo(this, retrofit, endPoint, this);
 
-    }
-    public void changePass(View view)
-    {
-        Toast.makeText(this,"Change pwd",Toast.LENGTH_LONG).show();
+        //Below line was giving error...
+        //I have tried to remove
+        // Please check this in case I missed something
+        //
+        AuthenticationService.getMyInfo(this, retrofit, endPoint, this);
+        //End
+
     }
 
     @Override
     public void onDone(int message_id, int code, Object... args) {
         displayMessage(this, "Success", Snackbar.LENGTH_LONG);
 
-        UserInfo userInfo = (UserInfo) args[0];
+        if(args.length>0) {
+            Rider rider = (Rider) args[0];
 
-        if(userInfo!=null){
-            //here
-            user_name_ma.setText(userInfo.getEmail());
-            phone_ma.setText(userInfo.getPhone().toString());
-            vehicle_number_ma.setText(userInfo.getRider().getVehicleNumber());
+            //here is baker info
+            phone_baker.setText(rider.getUser().getPhone());
+            email_baker.setText(rider.getUser().getEmail());
+            address_baker.setText(rider.getVehicleNumber());
         }
+
     }
 
     @Override
@@ -78,4 +87,20 @@ public class MyAccountActivity extends AppCompatActivity implements OnWebService
     public void onError(int message_id, int code, String... args) {
         displayError(this, message_id, Snackbar.LENGTH_LONG);
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                Toast.makeText(this,"Password successfully updated",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    public void changePassword(View view)
+    {
+        Intent intent=new Intent(this,ChangePasswordActivity.class);
+        startActivityForResult(intent,1);
+    }
+
 }

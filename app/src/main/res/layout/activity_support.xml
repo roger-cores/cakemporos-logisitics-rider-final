@@ -28,19 +28,27 @@
             android:text="@string/img_support"
             />
     </android.support.v7.widget.Toolbar>
-    <TextView
-        android:padding="50dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:textAlignment="center"
+        android:orientation="vertical"
+        android:layout_marginTop="50dp"
+        android:layout_height="wrap_content">
+    <Button
+        android:layout_width="match_parent"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
         style="@style/Base.TextAppearance.AppCompat.Large"
         android:text="@string/call_manager_support"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:padding="10dp"
+        android:layout_height="wrap_content"
+        android:onClick="callManager" />
+    <Button
         android:layout_width="match_parent"
-        android:textAlignment="center"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
         style="@style/Base.TextAppearance.AppCompat.Large"
         android:text="@string/email_manager_support"
-        android:layout_height="wrap_content" />
-
+        android:layout_height="wrap_content"
+        android:onClick="emailManager" />
+    </LinearLayout>
 </LinearLayout>

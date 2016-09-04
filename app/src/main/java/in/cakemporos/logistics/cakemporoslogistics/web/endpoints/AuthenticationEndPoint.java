@@ -6,6 +6,7 @@ import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.ChangePassReque
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.Response;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.UserInfo;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.ValidateRequest;
+import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.entities.Rider;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -40,4 +41,6 @@ public interface AuthenticationEndPoint {
     @PUT("user/change-pass")
     public Call<Response> changePassword(@Header("x-access-token") String accessToken, @Body ChangePassRequest changePassRequest);
 
+    @GET("user/userinfo")
+    public Call<Rider> getMyInfo(@Header("x-access-token") String accessToken);
 }

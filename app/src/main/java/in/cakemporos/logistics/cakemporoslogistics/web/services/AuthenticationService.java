@@ -25,6 +25,7 @@ import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.Error;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.Response;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.UserInfo;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.ValidateRequest;
+import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.entities.Rider;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,6 +33,40 @@ import retrofit2.Converter;
 import retrofit2.Retrofit;
 
 public class AuthenticationService {
+    public static void getMyInfo(final Activity activity,
+                                 final Retrofit retrofit,
+                                 final AuthenticationEndPoint authenticationEndPoint,
+                                 final OnWebServiceCallDoneEventListener event){
+
+        final Call<Rider> getMyInfoCall = authenticationEndPoint.getMyInfo(Utility.getKey(activity).getAccess());
+
+        getMyInfoCall.enqueue(new Callback<Rider>() {
+            @Override
+            public void onResponse(Call<Rider> call, retrofit2.Response<Rider> response) {
+                if(response != null && !response.isSuccessful() && response.errorBody() != null){
+                    event.onContingencyError(0);
+                }
+                else {
+                    Rider rider = response.body();
+                    if(rider!=null) {
+                        event.onDone(R.string.success, 0, rider);
+                    } else {
+                        event.onContingencyError(0);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Rider> call, Throwable t) {
+                if(t instanceof IOException){
+                    event.onError(R.string.offline, 2);
+                } else if(t instanceof SocketTimeoutException){
+                    event.onError(R.string.request_timed_out, 3);
+                } else event.onContingencyError(0);
+            }
+        });
+
+    }
     public static void validateAccessToken(final Activity activity,
                                            final Retrofit retrofit,
                                            final boolean validateRefresh,
