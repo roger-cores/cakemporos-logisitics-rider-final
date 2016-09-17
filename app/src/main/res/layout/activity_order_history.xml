@@ -35,14 +35,13 @@
         android:background="@color/white"
         android:id="@+id/linear_layout_order_history"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
         android:layout_marginRight="20dp">
         <android.support.v7.widget.RecyclerView
+            android:paddingTop="500dp"
             android:id="@+id/my_recycler_view_order_history"
             android:scrollbars="vertical"
             android:background="@color/grey"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-    </LinearLayout>
-</LinearLayout>
+    </LinearLayout></LinearLayout>

@@ -48,6 +48,12 @@
         <activity
             android:name=".activities.ChangePasswordActivity"
             android:label="@string/home_name" />
+        <activity
+            android:name=".activities.ChangeStatusActivity"
+            android:label="@string/home_name" />
+        <activity
+            android:name=".activities.SingleOrderActivity"
+            android:label="@string/home_name" />
     </application>
 
 </manifest>

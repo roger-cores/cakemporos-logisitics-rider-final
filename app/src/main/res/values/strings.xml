@@ -31,7 +31,7 @@
 
     <!-- Strings related to Web Services -->
     <!--<string name="base_url">http://www.galvanie.com:3000/api/</string>-->
-    <string name="base_url">http://192.168.0.102:3000/api/</string>
+    <string name="base_url">http://192.168.0.101:3000/api/</string>
     <string name="connection_error">There was an error...</string>
 
     <!-- Strings related to web service authentication -->
@@ -89,4 +89,16 @@
     <!-- Strings related to App Version-->
     <string name="title_app_version">Version 1.0</string>
     <string name="version_description">About\nCakemporos\nOS</string>
+
+    <!-- Strings related to Order Status Change-->
+    <string name="select_status">Select Status:</string>
+    <string name="delivered_status">Delivered</string>
+
+    <!-- Strings related to Individual Order Details-->
+    <string name="cake_so">Cake: </string>
+    <string name="pickup_so">Pick Up: </string>
+    <string name="customer_so">Customer: </string>
+    <string name="phone_so">Phone: </string>
+    <string name="address_so">Address: </string>
+    <string name="drop_so">Drop: </string>
 </resources>
