@@ -3,6 +3,7 @@ package in.cakemporos.logistics.cakemporoslogistics.web.endpoints;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.AuthRequest;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.AuthResponse;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.ChangePassRequest;
+import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.FCMRegRequest;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.Response;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.UserInfo;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.ValidateRequest;
@@ -43,4 +44,11 @@ public interface AuthenticationEndPoint {
 
     @GET("user/userinfo")
     public Call<Rider> getMyInfo(@Header("x-access-token") String accessToken);
+
+    @PUT("user/change-pass")
+    public Call<Response> changePassword(@Header("x-access-token") String accessToken, @Body AuthRequest authRequest);
+
+    @PUT("user/updateReg")
+    public Call<Response> updateReg(@Header("x-access-token") String accessToken, @Body FCMRegRequest regRequest);
+
 }

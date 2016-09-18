@@ -15,7 +15,7 @@ import in.cakemporos.logistics.cakemporoslogistics.R;
 /**
  * Created by maitr on 15-Aug-16.
  */
-public class SupportActivity extends AppCompatActivity {
+public class SupportActivity extends BaseActivity {
     private ImageButton home;
     private String manager_phone,manager_email,email_subject,email_text;
 

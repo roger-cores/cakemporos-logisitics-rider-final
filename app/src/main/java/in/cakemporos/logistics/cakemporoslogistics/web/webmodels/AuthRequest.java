@@ -18,6 +18,9 @@ public class AuthRequest {
 
     private String password;
 
+    @SerializedName("newpassword")
+    private String newPassword;
+
     @SerializedName("refreshToken")
     private String refreshToken;
 
@@ -35,6 +38,15 @@ public class AuthRequest {
         grantType = context.getString(R.string.grant_password);
     }
 
+    public AuthRequest(String username, String password, String newPassword, Context context) {
+        this.username = username;
+        this.password = password;
+        this.newPassword = newPassword;
+        clientId = context.getString(R.string.client_id);
+        clientSecret = context.getString(R.string.client_secret);
+        grantType = context.getString(R.string.grant_password);
+    }
+
     public AuthRequest(String refreshToken, Context context) {
         this.refreshToken = refreshToken;
         clientId = context.getString(R.string.client_id);
@@ -42,7 +54,13 @@ public class AuthRequest {
         grantType = context.getString(R.string.grant_refresh);
     }
 
+    public String getNewPassword() {
+        return newPassword;
+    }
 
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
 
     public String getClientSecret() {
         return clientSecret;

@@ -2,21 +2,26 @@ package in.cakemporos.logistics.cakemporoslogistics.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import in.cakemporos.logistics.cakemporoslogistics.R;
 import in.cakemporos.logistics.cakemporoslogistics.events.OnWebServiceCallDoneEventListener;
+import in.cakemporos.logistics.cakemporoslogistics.receivers.DeregisterEventReceiver;
+import in.cakemporos.logistics.cakemporoslogistics.staticvals.IntentFilters;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by maitr on 29-Jul-16.
  */
-public class HomeActivity extends AppCompatActivity implements OnWebServiceCallDoneEventListener {
+public class HomeActivity extends BaseActivity {
     private View order_history,my_account,support,app_ver;
     private Context ctx_home=this;
+
+
 
     private Retrofit retrofit;
     @Override
@@ -67,20 +72,11 @@ public class HomeActivity extends AppCompatActivity implements OnWebServiceCallD
                 .build();
 
 
-    }
 
-    @Override
-    public void onDone(int message_id, int code, Object... args) {
+
 
     }
 
-    @Override
-    public void onContingencyError(int code) {
 
-    }
 
-    @Override
-    public void onError(int message_id, int code, String... args) {
-
-    }
 }

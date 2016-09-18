@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cakemporos Logistics</string>
+    <string name="app_name">Cakemporos Rider</string>
     <string name="home_name"></string>
     <!-- Strings related to login -->
     <string name="prompt_email">USERNAME</string>
@@ -31,7 +31,7 @@
 
     <!-- Strings related to Web Services -->
     <!--<string name="base_url">http://www.galvanie.com:3000/api/</string>-->
-    <string name="base_url">http://192.168.0.102:3000/api/</string>
+    <string name="base_url">http://192.168.0.103:3000/api/</string>
     <string name="connection_error">There was an error...</string>
 
     <!-- Strings related to web service authentication -->
@@ -89,4 +89,5 @@
     <!-- Strings related to App Version-->
     <string name="title_app_version">Version 1.0</string>
     <string name="version_description">About\nCakemporos\nOS</string>
+    <string name="logged_out_message">You are Logged out of Cakemporos</string>
 </resources>

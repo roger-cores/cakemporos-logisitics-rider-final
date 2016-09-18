@@ -20,6 +20,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +30,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -296,6 +299,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         this.startActivity(intent);
         this.finish();
+
+        String token = FirebaseInstanceId.getInstance().getToken();
+
+        AuthenticationEndPoint endPoint = retrofit.create(AuthenticationEndPoint.class);
+        AuthenticationService.updateReg(this, retrofit, endPoint, token, new OnWebServiceCallDoneEventListener() {
+            String TAG = this.getClass().getName();
+            @Override
+            public void onDone(int message_id, int code, Object... args) {
+                Log.d(TAG, LoginActivity.this.getString(message_id));
+            }
+
+            @Override
+            public void onContingencyError(int code) {
+                Log.d(TAG, LoginActivity.this.getString(R.string.error_contingency));
+            }
+
+            @Override
+            public void onError(int message_id, int code, String... args) {
+                Log.d(TAG, LoginActivity.this.getString(message_id));
+            }
+        });
     }
 
     @Override
