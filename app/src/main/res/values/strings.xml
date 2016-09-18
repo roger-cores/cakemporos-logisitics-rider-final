@@ -90,4 +90,16 @@
     <string name="title_app_version">Version 1.0</string>
     <string name="version_description">About\nCakemporos\nOS</string>
     <string name="logged_out_message">You are Logged out of Cakemporos</string>
+
+    <!-- Strings related to Order Status Change-->
+    <string name="select_status">Select Status:</string>
+    <string name="delivered_status">Delivered</string>
+
+    <!-- Strings related to Individual Order Details-->
+    <string name="cake_so">Cake: </string>
+    <string name="pickup_so">Pick Up: </string>
+    <string name="customer_so">Customer: </string>
+    <string name="phone_so">Phone: </string>
+    <string name="address_so">Address: </string>
+    <string name="drop_so">Drop: </string>
 </resources>

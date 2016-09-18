@@ -1,16 +1,17 @@
 package in.cakemporos.logistics.cakemporoslogistics.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,12 +43,19 @@ public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCa
     private RecyclerView.LayoutManager mLayoutManager;
     private Context ctx=this;
     private ImageButton home;
+    private int item_clicked;
     Retrofit retrofit;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_oh, menu);
+        //
+        //disable if not dispatched
+        if(orders[item_clicked].getStatus()==OrderStatus.DISPATCHED)
+            menu.getItem(1).setEnabled(true);
+        else
+            menu.getItem(1).setEnabled(false);
         return true;
     }
 
@@ -60,7 +68,20 @@ public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCa
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_order_details_oh) {
-            Toast.makeText(this,"Order Details",Toast.LENGTH_SHORT).show();
+            Intent intent=new Intent(ctx,SingleOrderActivity.class);
+            //Order order = orders[item_clicked];
+            Bundle bundle=new Bundle();
+            bundle.putSerializable("current_order",orders[item_clicked]);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            return true;
+        }
+        else if(id == R.id.action_change_status_oh){
+            //
+            //Toast.makeText(ctx,"Change",Toast.LENGTH_SHORT).show();
+            //
+            Intent intent=new Intent(ctx,ChangeStatusActivity.class);
+            startActivityForResult(intent,2);
             return true;
         }
 
@@ -96,63 +117,42 @@ public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCa
                 finish();
             }
         });
-        //
 
-        //
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
             @Override public void onItemClick(View view, final int position) {
                 // TODO Handle item click
                 TextView status=(TextView)view.findViewById(R.id.order_status_oh);
 
-                // Ok
-//                menu_dots.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(final View view) {
-//                        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-//                        builder.setTitle("Confirm Status Change");
-//                        builder.setMessage("Are you sure you want to DELIVER this order?");
-//
-//                        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-//
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                OrderEndPoint endPoint = retrofit.create(OrderEndPoint.class);
-//                                OrderService.deliverOrder(OrderHistoryActivity.this, retrofit, endPoint, new OnWebServiceCallDoneEventListener() {
-//                                    @Override
-//                                    public void onDone(int message_id, int code, Object... args) {
-//                                        //successful
-//                                        orders[position].setStatus(OrderStatus.DEL);
-//                                        mAdapter.notifyDataSetChanged();
-//                                    }
-//
-//                                    @Override
-//                                    public void onContingencyError(int code) {
-//                                        displayContingencyError(OrderHistoryActivity.this, 0);
-//                                    }
-//
-//                                    @Override
-//                                    public void onError(int message_id, int code, String... args) {
-//                                        displayError(OrderHistoryActivity.this, message_id, Snackbar.LENGTH_LONG);
-//                                    }
-//                                }, orders[position].getId());
-//
-//                                dialog.dismiss();
-//                            }
-//                        });
-//                        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                // Do nothing
-//                                dialog.dismiss();
-//                            }
-//                        });
-//
-//                        AlertDialog alert = builder.create();
-//                        alert.show();
-//                    }
-//                });
+                Toolbar toolbar=(Toolbar)view.findViewById(R.id.toolbar_menu_oh);
+                setSupportActionBar(toolbar);
+                item_clicked=position;
+
             }
         }));
+        //
+        //jhol
+        TranslateAnimation animation = new TranslateAnimation(0, 0, 0, -200);
+        animation.setDuration(100);
+        animation.setFillAfter(false);
+        animation.setAnimationListener(new MyAnimationListener());
+        mRecyclerView.startAnimation(animation);
 
+    }
+    private class MyAnimationListener implements Animation.AnimationListener {
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            mRecyclerView.clearAnimation();
+            mRecyclerView.setPadding(0, 50, 0, 0);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+        }
 
     }
 
@@ -167,6 +167,7 @@ public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCa
             //                  / \
             Collections.reverse(orderlist);
             orders=orderlist.toArray(new Order[orderlist.size()]);
+
             ((OrderAdapter)mAdapter).setmDataset(orders);
             mAdapter.notifyDataSetChanged();
 
@@ -181,5 +182,56 @@ public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCa
     @Override
     public void onError(int message_id, int code, String... args) {
         displayError(this, message_id, Snackbar.LENGTH_LONG);
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        {
+            if (resultCode == 2) {
+                // TODO Extract the data returned from the child Activity.
+                // Customer customerValues= (Customer) data.getSerializableExtra("customer");
+                int val=data.getIntExtra("status",-1);
+                Toast.makeText(ctx,val+"",Toast.LENGTH_SHORT).show();
+                final OrderStatus orderStatus;
+                switch (val)
+                {
+                    case 0:
+                        orderStatus=OrderStatus.DELIVERED;
+
+                        OrderEndPoint endPoint = retrofit.create(OrderEndPoint.class);
+                        //TODO Server side
+                        OrderService.deliverOrder(OrderHistoryActivity.this, retrofit, endPoint, new OnWebServiceCallDoneEventListener() {
+                            @Override
+                            public void onDone(int message_id, int code, Object... args) {
+                                //successful
+                                orders[item_clicked].setStatus(orderStatus);
+                                Toast.makeText(ctx,"os: "+orderStatus,Toast.LENGTH_SHORT).show();
+                                mAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onContingencyError(int code) {
+                                displayContingencyError(OrderHistoryActivity.this, 0);
+                            }
+
+                            @Override
+                            public void onError(int message_id, int code, String... args) {
+                                displayError(OrderHistoryActivity.this, message_id, Snackbar.LENGTH_LONG);
+                            }
+                        }, orders[item_clicked].getId());
+
+                        break;
+                    default:
+                        orderStatus = OrderStatus.PENDING;
+                }
+                orders[item_clicked].setStatus(orderStatus);
+                mAdapter.notifyDataSetChanged();
+                //
+
+
+                //
+            }
+        }
     }
 }
