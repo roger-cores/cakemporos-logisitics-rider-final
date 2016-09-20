@@ -104,4 +104,12 @@ public class MyAccountActivity extends BaseActivity implements OnWebServiceCallD
         startActivityForResult(intent,1);
     }
 
+    public void logout(View view){
+        AuthenticationService.logout(this);
+        Intent intent = new Intent(this, SplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(intent);
+    }
+
 }

@@ -71,6 +71,8 @@
         <activity
             android:name=".activities.SingleOrderActivity"
             android:label="@string/home_name" />
+
+
     </application>
 
 </manifest>

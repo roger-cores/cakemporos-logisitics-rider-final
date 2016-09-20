@@ -97,12 +97,18 @@
         android:paddingBottom="10dp"
         android:layout_height="wrap_content">
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:layout_marginRight="70dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:text="@string/password_ma"
-            android:onClick="changePassword" />
+            android:onClick="changePassword"
+            android:layout_weight="1"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/logout_text"
+            android:onClick="logout"
+            android:layout_weight="1"
+            />
     </LinearLayout>
 
 </LinearLayout>

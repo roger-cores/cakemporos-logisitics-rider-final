@@ -42,7 +42,7 @@ public class FlashMessage {
 
         String message;
         if(args != null){
-            message = String.format(activity.getString(id), args);
+            message = String.format(activity.getString(id), (Object[]) args);
         } else message = activity.getString(id);
 
         Snackbar snack = Snackbar.make(activity.findViewById(android.R.id.content), message, duration)

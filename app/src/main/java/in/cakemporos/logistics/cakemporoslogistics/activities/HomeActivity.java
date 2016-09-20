@@ -21,6 +21,7 @@ public class HomeActivity extends BaseActivity {
     private View order_history,my_account,support,app_ver;
     private Context ctx_home=this;
 
+    private DeregisterEventReceiver reciever;
 
 
     private Retrofit retrofit;
@@ -29,6 +30,8 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         //get views
+        reciever = new DeregisterEventReceiver();
+
         order_history= findViewById(R.id.grid_1);
         my_account= findViewById(R.id.grid_2);
         support= findViewById(R.id.grid_3);
@@ -77,6 +80,24 @@ public class HomeActivity extends BaseActivity {
 
     }
 
-
-
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//
+//
+//    }
+//
+////    @Override
+////    protected void onStart() {
+////        super.onStart();
+////        IntentFilter filter = new IntentFilter();
+////        filter.addAction(IntentFilters.LOGOUT);
+////        registerReceiver(reciever, filter);
+////    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//
+//    }
 }
