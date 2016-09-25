@@ -13,5 +13,11 @@
         android:title="@string/change_status_menu"
         app:showAsAction="never"
         />
+    <item
+        android:id="@+id/action_rider_start_oh"
+        android:orderInCategory="200"
+        android:title="@string/rider_start_menu"
+        app:showAsAction="never"
+        />
 </menu>
 

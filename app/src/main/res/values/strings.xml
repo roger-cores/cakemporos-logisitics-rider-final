@@ -30,8 +30,8 @@
     <string name="offline">Please check your internet connection</string>
 
     <!-- Strings related to Web Services -->
-    <!--<string name="base_url">http://www.galvanie.com:3000/api/</string>-->
-    <string name="base_url">http://192.168.0.101:3000/api/</string>
+    <string name="base_url">http://www.galvanie.com:3000/api/</string>
+    <!--<string name="base_url">http://192.168.0.101:3000/api/</string>-->
     <string name="connection_error">There was an error...</string>
 
     <!-- Strings related to web service authentication -->
@@ -68,6 +68,7 @@
     <string name="order_status">PENDING</string>
     <string name="order_details_menu">Order Details</string>
     <string name="change_status_menu">Change Status</string>
+    <string name="rider_start_menu">Start</string>
 
     <!-- Strings related to My Account-->
     <string name="title_my_account">My Account</string>
