@@ -30,8 +30,8 @@
     <string name="offline">Please check your internet connection</string>
 
     <!-- Strings related to Web Services -->
-    <string name="base_url">http://www.galvanie.com:3000/api/</string>
-    <!--<string name="base_url">http://192.168.0.103:3000/api/</string>-->
+    <!--<string name="base_url">http://www.galvanie.com:3000/api/</string>-->
+    <string name="base_url">http://192.168.0.102:3000/api/</string>
     <string name="connection_error">There was an error...</string>
 
     <!-- Strings related to web service authentication -->
@@ -103,4 +103,5 @@
     <string name="address_so">Address: </string>
     <string name="drop_so">Drop: </string>
     <string name="logout_text">Log out</string>
+    <string name="action_start_order">start</string>
 </resources>

@@ -10,6 +10,7 @@ import in.cakemporos.logistics.cakemporoslogistics.R;
 import in.cakemporos.logistics.cakemporoslogistics.dbase.Utility;
 import in.cakemporos.logistics.cakemporoslogistics.events.OnWebServiceCallDoneEventListener;
 import in.cakemporos.logistics.cakemporoslogistics.web.endpoints.OrderEndPoint;
+import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.Location;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.entities.EntityBase;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.entities.Order;
 import retrofit2.Call;
@@ -99,6 +100,61 @@ public class OrderService {
 //                    }
                     event.onContingencyError(0);
                 } else if(response != null && response.body() != null){
+                    event.onDone(R.string.success, 1);
+                } else {
+                    event.onContingencyError(0);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<in.cakemporos.logistics.cakemporoslogistics.web.webmodels.Response> call, Throwable t) {
+                if(t instanceof IOException){
+                    event.onError(R.string.offline, 2);
+                } else if(t instanceof SocketTimeoutException){
+                    event.onError(R.string.request_timed_out, 3);
+                } else event.onContingencyError(0);
+            }
+        });
+
+
+    }
+
+    public static void sendLocation(final Activity activity,
+                                    final Retrofit retrofit,
+                                    final OrderEndPoint orderEndPoint,
+                                    final OnWebServiceCallDoneEventListener event,
+                                    Float lattitude,
+                                    Float longitude,
+                                    final String id){
+
+
+        Location location = new Location();
+        location.setLattitude(lattitude);
+        location.setLongitude(longitude);
+
+        Call<in.cakemporos.logistics.cakemporoslogistics.web.webmodels.Response> callForSendLocation = orderEndPoint.sendLocation(Utility.getKey(activity).getAccess(), id, location);
+        callForSendLocation.enqueue(new Callback<in.cakemporos.logistics.cakemporoslogistics.web.webmodels.Response>() {
+            @Override
+            public void onResponse(Call<in.cakemporos.logistics.cakemporoslogistics.web.webmodels.Response> call, Response<in.cakemporos.logistics.cakemporoslogistics.web.webmodels.Response> response) {
+                if(response != null && !response.isSuccessful() && response.errorBody() != null) {
+                    //Branch: Error
+//                    Converter<ResponseBody, Error> errorConverter =
+//                            retrofit.responseBodyConverter(Error.class, new Annotation[0]);
+//                    try {
+//                        Error error = errorConverter.convert(response.errorBody());
+//                        switch (error.getError()) {
+//                            case "Validation failed":
+//                                event.onError(R.string.bad_input, 0);
+//                                break;
+//                            case "Unauthorized":
+//                                event.onError(R.string.unauthorized, 0);
+//                                break;
+//                        }
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+                    event.onContingencyError(0);
+                } else if(response != null && response.body() != null && response.body().getCode() == 1){
                     event.onDone(R.string.success, 1);
                 } else {
                     event.onContingencyError(0);
