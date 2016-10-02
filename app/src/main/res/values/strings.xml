@@ -72,7 +72,7 @@
 
     <!-- Strings related to My Account-->
     <string name="title_my_account">My Account</string>
-    <string name="email_ma">Email:</string>
+    <string name="email_ma">Username:</string>
     <string name="password_ma">Change Password</string>
     <string name="phone_ma">Phone:</string>
     <string name="address_ma">Vehicle Number:</string>
@@ -82,6 +82,7 @@
     <string name="edit_new_password_ma_cp">New Password</string>
     <string name="submit_change_password_ma_cp">Submit</string>
     <string name="default_val_so">Unavailable</string>
+    <string name="logout_text">Log out</string>
 
     <!-- Strings related to Support-->
     <string name="call_manager_support">Call Manager</string>

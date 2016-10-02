@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey">
+    android:background="@color/global_bg">
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
             android:paddingTop="500dp"
             android:id="@+id/my_recycler_view_order_history"
             android:scrollbars="vertical"
-            android:background="@color/grey"
+            android:background="@color/global_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
