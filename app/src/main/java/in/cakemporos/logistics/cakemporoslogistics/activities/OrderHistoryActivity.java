@@ -1,9 +1,14 @@
 package in.cakemporos.logistics.cakemporoslogistics.activities;
 
+import android.Manifest;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +27,7 @@ import java.util.List;
 import in.cakemporos.logistics.cakemporoslogistics.R;
 import in.cakemporos.logistics.cakemporoslogistics.adapters.OrderAdapter;
 import in.cakemporos.logistics.cakemporoslogistics.events.OnWebServiceCallDoneEventListener;
+import in.cakemporos.logistics.cakemporoslogistics.services.LocationService;
 import in.cakemporos.logistics.cakemporoslogistics.utilities.Factory;
 import in.cakemporos.logistics.cakemporoslogistics.web.endpoints.OrderEndPoint;
 import in.cakemporos.logistics.cakemporoslogistics.web.services.OrderService;
@@ -37,6 +43,10 @@ import static in.cakemporos.logistics.cakemporoslogistics.utilities.FlashMessage
  * Created by bloss on 14/8/16.
  */
 public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCallDoneEventListener {
+
+
+    private static final int REQUEST_LOCATION_FINE = 1;
+
     private Order[] orders;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -86,6 +96,39 @@ public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCa
         }
         else if(id == R.id.action_rider_start_oh){
             //TODO: yaha daal Start ka code
+
+            OrderEndPoint endPoint = retrofit.create(OrderEndPoint.class);
+            OrderService.startOrder(OrderHistoryActivity.this, retrofit, endPoint, new OnWebServiceCallDoneEventListener() {
+                @Override
+                public void onDone(int message_id, int code, Object... args) {
+                    if(!isMyServiceRunning(LocationService.class)){
+                        Intent serviceIntent = new Intent(OrderHistoryActivity.this, LocationService.class);
+                        if (ActivityCompat.checkSelfPermission(OrderHistoryActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(OrderHistoryActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            // TODO: ask permission
+
+                            ActivityCompat.requestPermissions(OrderHistoryActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_FINE);
+
+                            return;
+                        }
+                        startService(serviceIntent);
+                    }
+
+                }
+
+                @Override
+                public void onContingencyError(int code) {
+                    displayContingencyError(OrderHistoryActivity.this, 0);
+                }
+
+                @Override
+                public void onError(int message_id, int code, String... args) {
+                    displayError(OrderHistoryActivity.this, message_id, Snackbar.LENGTH_LONG);
+
+                }
+            }, orders[item_clicked].getId());
+
+
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -236,5 +279,26 @@ public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCa
                 //
             }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if(requestCode == REQUEST_LOCATION_FINE){
+            if(!isMyServiceRunning(LocationService.class)) {
+                Intent serviceIntent = new Intent(this, LocationService.class);
+                startService(serviceIntent);
+            }
+        }
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -65,12 +66,16 @@
             </intent-filter>
         </service>
 
+        <service android:name="in.cakemporos.logistics.cakemporoslogistics.services.LocationService"/>
+
+
         <activity
             android:name=".activities.ChangeStatusActivity"
             android:label="@string/home_name" />
         <activity
             android:name=".activities.SingleOrderActivity"
             android:label="@string/home_name" />
+
 
 
     </application>

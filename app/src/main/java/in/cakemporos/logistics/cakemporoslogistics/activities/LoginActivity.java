@@ -1,5 +1,6 @@
 package in.cakemporos.logistics.cakemporoslogistics.activities;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -17,6 +18,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -38,6 +40,7 @@ import java.util.List;
 
 import in.cakemporos.logistics.cakemporoslogistics.R;
 import in.cakemporos.logistics.cakemporoslogistics.events.OnWebServiceCallDoneEventListener;
+import in.cakemporos.logistics.cakemporoslogistics.services.LocationService;
 import in.cakemporos.logistics.cakemporoslogistics.web.endpoints.AuthenticationEndPoint;
 import in.cakemporos.logistics.cakemporoslogistics.web.services.AuthenticationService;
 import retrofit2.Retrofit;
@@ -57,6 +60,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    private static final int REQUEST_LOCATION_FINE = 1;
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -127,7 +131,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
 
+
+
+
     }
+
+
+
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {

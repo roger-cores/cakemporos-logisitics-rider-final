@@ -3,6 +3,7 @@ package in.cakemporos.logistics.cakemporoslogistics.web.endpoints;
 import java.util.List;
 
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.Location;
+import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.LocationResponse;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.Response;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.entities.EntityBase;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.entities.Order;
@@ -24,8 +25,11 @@ public interface OrderEndPoint {
     @PUT("user/rider/order/{orderid}/deliver")
     public Call<Response> deliverOrder(@Header("x-access-token") String accessToken,@Path("orderid") String id);
 
-    @PUT("user/rider/order/{orderid}/location")
-    public Call<Response> sendLocation(@Header("x-access-token") String accessToken, @Path("orderid") String id, @Body Location location);
+    @PUT("user/rider/order/{orderid}/start")
+    public Call<Response> startOrder(@Header("x-access-token") String accessToken,@Path("orderid") String id);
+
+    @PUT("user/rider/order/location")
+    public Call<LocationResponse> sendLocation(@Header("x-access-token") String accessToken, @Body Location location);
 
 
 
