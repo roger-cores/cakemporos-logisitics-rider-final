@@ -54,7 +54,6 @@ public class LocationService extends Service implements OnWebServiceCallDoneEven
         retrofit = Factory.createClient(getString(R.string.base_url));
         endPoint = retrofit.create(OrderEndPoint.class);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new MyLocationListener();
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
         String provider = locationManager.getBestProvider(criteria, true);
@@ -64,10 +63,8 @@ public class LocationService extends Service implements OnWebServiceCallDoneEven
             return;
         }
         Location mostRecentLocation = locationManager.getLastKnownLocation(provider);
-        if(mostRecentLocation!=null)
+        if (mostRecentLocation != null)
             OrderService.sendLocation(this, retrofit, endPoint, this, mostRecentLocation.getLatitude(), mostRecentLocation.getLongitude());
-
-
 
 
     }
@@ -77,7 +74,6 @@ public class LocationService extends Service implements OnWebServiceCallDoneEven
     public IBinder onBind(Intent intent) {
         return null;
     }
-
 
 
     @Override
@@ -97,9 +93,23 @@ public class LocationService extends Service implements OnWebServiceCallDoneEven
     @Override
     public void onDone(int message_id, int code, Object... args) {
         Log.d(TAG, getString(message_id));
-        if(args != null && args.length != 0 && args[0] != null && args[0] instanceof Boolean){
+        if (args != null && args.length != 0 && args[0] != null && args[0] instanceof Boolean) {
             Boolean close = (Boolean) args[0];
-            if(close) this.stopSelf();
+            if (close) {
+                this.stopSelf();
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                locationManager.removeUpdates(locationListener);
+
+            }
         }
     }
 

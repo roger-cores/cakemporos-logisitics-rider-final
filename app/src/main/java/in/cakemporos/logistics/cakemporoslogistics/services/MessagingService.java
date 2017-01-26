@@ -48,7 +48,7 @@ public class MessagingService extends FirebaseMessagingService {
                             this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.ic_logo_fb)
+                            .setSmallIcon(R.drawable.ic_action_only_ce)
                             .setContentTitle(remoteMessage.getData().get("title"))
                             .setContentIntent(contentIntent)
                             .setAutoCancel(true)
@@ -70,7 +70,7 @@ public class MessagingService extends FirebaseMessagingService {
                             this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.ic_logo_fb)
+                            .setSmallIcon(R.drawable.ic_action_only_ce)
                             .setContentIntent(contentIntent)
                             .setContentTitle(remoteMessage.getData().get("title"))
                             .setContentText(remoteMessage.getData().get("body"));

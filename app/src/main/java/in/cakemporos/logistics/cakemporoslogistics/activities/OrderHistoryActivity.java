@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,8 @@ public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCa
     private int item_clicked;
     Retrofit retrofit;
 
+    private ProgressBar progressBar;
+    private TextView blankMessage;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -66,6 +69,10 @@ public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCa
             menu.getItem(1).setEnabled(true);
         else
             menu.getItem(1).setEnabled(false);
+
+        if(orders[item_clicked].getStatus()==OrderStatus.DELIVERED){
+            menu.getItem(2).setEnabled(false);
+        }
         return true;
     }
 
@@ -139,7 +146,8 @@ public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCa
         setContentView(R.layout.activity_order_history);
         //
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_order_history);
-
+        progressBar = (ProgressBar) findViewById(R.id.activity_order_history_progress);
+        blankMessage = (TextView) findViewById(R.id.order_history_blank_message);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -155,7 +163,10 @@ public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCa
 
         OrderEndPoint endPoint = retrofit.create(OrderEndPoint.class);
         OrderService.getMyOrders(this, retrofit, endPoint, this);
-        //
+        progressBar.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.GONE);
+
+
         home= (ImageButton) findViewById(R.id.home_img_button_order_history);
         home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,6 +215,8 @@ public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCa
 
     @Override
     public void onDone(int message_id, int code, Object... args) {
+        progressBar.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
         displayMessage(this, "Success", Snackbar.LENGTH_LONG);
 
         List<Order> orderlist = ((List<Order>) args[0]);
@@ -215,6 +228,9 @@ public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCa
             orders=orderlist.toArray(new Order[orderlist.size()]);
 
             ((OrderAdapter)mAdapter).setmDataset(orders);
+            if(orders.length==0) blankMessage.setVisibility(View.VISIBLE);
+            else blankMessage.setVisibility(View.GONE);
+
             mAdapter.notifyDataSetChanged();
 
         }
@@ -222,11 +238,15 @@ public class OrderHistoryActivity extends BaseActivity implements OnWebServiceCa
 
     @Override
     public void onContingencyError(int code) {
+        progressBar.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
         displayContingencyError(this, 0);
     }
 
     @Override
     public void onError(int message_id, int code, String... args) {
+        progressBar.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
         displayError(this, message_id, Snackbar.LENGTH_LONG);
 
     }

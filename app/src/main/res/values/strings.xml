@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cakemporos Rider</string>
+    <string name="app_name">My Cake Box</string>
     <string name="home_name"></string>
     <!-- Strings related to login -->
     <string name="prompt_email">USERNAME</string>
@@ -14,7 +14,7 @@
         completions.
     </string>
     <string name="forgot_password">FORGOT PASSWORD</string>
-    <string name="logo">Cakemporos\nLogistics</string>
+    <string name="logo">My Cake Box</string>
     <!-- Strings related to home -->
     <string name="user">User</string>
     <string name="title_home">WELCOME USER</string>
@@ -25,13 +25,13 @@
 
     <!-- Error Messages -->
     <string name="error_contingency">Someone spoiled the recipe!\nPlease wait while we behead them.</string>
-    <string name="invalid_user_credentials">I don\'t know you yet! Sign Up now!</string>
+    <string name="invalid_user_credentials">Username and password mismatch. Please check your credentials.</string>
     <string name="request_timed_out">Unable to reach the server! Please contact the developer.</string>
     <string name="offline">Please check your internet connection</string>
 
     <!-- Strings related to Web Services -->
-    <string name="base_url">http://www.galvanie.com:3000/api/</string>
-    <!--<string name="base_url">http://192.168.0.102:3000/api/</string>-->
+    <string name="base_url">https://cakemporos-logistics.herokuapp.com/api/</string>
+    <!--<string name="base_url">http://192.168.0.103:3000/api/</string>-->
 
     <string name="connection_error">There was an error...</string>
 
@@ -50,7 +50,7 @@
 
 
     <!-- Splash Activity -->
-    <string name="title_activity_splash">Cakemporos Logistics</string>
+    <string name="title_activity_splash">My Cake Box</string>
     <string name="please_sign_in" />
     <string name="unauthorized">Unauthorized</string>
     <string name="bad_input">Request Failed</string>
@@ -64,8 +64,8 @@
     <string name="drop_date">Drop Date</string>
     <string name="customer_name">Customer Name: </string>
     <string name="phone_number">Phone No: </string>
-    <string name="pickup_location">Pick Up Location</string>
-    <string name="drop_location">Drop Location</string>
+    <string name="pickup_location">Pick Up Location:</string>
+    <string name="drop_location">Drop Location:</string>
     <string name="order_status">PENDING</string>
     <string name="order_details_menu">Order Details</string>
     <string name="change_status_menu">Change Status</string>
@@ -73,12 +73,12 @@
 
     <!-- Strings related to My Account-->
     <string name="title_my_account">My Account</string>
-    <string name="email_ma">Email:</string>
+    <string name="email_ma">Username:</string>
     <string name="password_ma">Change Password</string>
     <string name="phone_ma">Phone:</string>
     <string name="address_ma">Vehicle Number:</string>
-    <string name="old_password_ma_cp">Enter Old Password: </string>
-    <string name="new_password_ma_cp">Enter New Password: </string>
+    <string name="old_password_ma_cp">Old Password: </string>
+    <string name="new_password_ma_cp">New Password: </string>
     <string name="edit_old_password_ma_cp">Old Password</string>
     <string name="edit_new_password_ma_cp">New Password</string>
     <string name="submit_change_password_ma_cp">Submit</string>
@@ -90,15 +90,15 @@
 
     <!-- Strings related to App Version-->
     <string name="title_app_version">Version 1.0</string>
-    <string name="version_description">About\nCakemporos\nOS</string>
-    <string name="logged_out_message">You are Logged out of Cakemporos</string>
+    <string name="version_description">About\My Cake Box\nOS</string>
+    <string name="logged_out_message">You are Logged out of My Cake Box</string>
 
     <!-- Strings related to Order Status Change-->
     <string name="select_status">Select Status:</string>
     <string name="delivered_status">Delivered</string>
 
     <!-- Strings related to Individual Order Details-->
-    <string name="cake_so">Cake: </string>
+    <string name="cake_so">Cake Type: </string>
     <string name="pickup_so">Pick Up: </string>
     <string name="customer_so">Customer: </string>
     <string name="phone_so">Phone: </string>
@@ -106,4 +106,18 @@
     <string name="drop_so">Drop: </string>
     <string name="logout_text">Log out</string>
     <string name="action_start_order">start</string>
+
+    <!--Dialog Strings-->
+    <string name="dialog_ok">Ok</string>
+    <string name="dialog_cancel">Cancel</string>
+
+
+    <!--User Details Strings-->
+    <string name="enter_username">Enter Username</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="otp">OTP</string>
+    <string name="enter_new_pasword">Enter New Password</string>
+    <string name="re_enter_new_password">Re-Enter New Password</string>
+    <string name="re_enter">RE-ENTER\nPASSWORD</string>
+    <string name="done">Done</string>
 </resources>

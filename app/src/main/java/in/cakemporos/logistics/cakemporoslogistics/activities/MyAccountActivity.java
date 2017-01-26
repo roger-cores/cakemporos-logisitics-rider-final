@@ -5,8 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,11 +34,17 @@ public class MyAccountActivity extends BaseActivity implements OnWebServiceCallD
     private ImageButton home;
     private TextView email_baker,address_baker,phone_baker;
     private Retrofit retrofit;
+
+    private CardView cardView;
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
         //find views
+        progressBar = (ProgressBar) findViewById(R.id.activity_my_account_progress);
+        cardView = (CardView) findViewById(R.id.card_view_1);
         home=(ImageButton)findViewById(R.id.home_img_button_my_account);
         email_baker=(TextView)findViewById(R.id.email_baker_ma);
         address_baker=(TextView)findViewById(R.id.address_baker_ma);
@@ -59,13 +69,19 @@ public class MyAccountActivity extends BaseActivity implements OnWebServiceCallD
         // Please check this in case I missed something
         //
         AuthenticationService.getMyInfo(this, retrofit, endPoint, this);
+        cardView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
         //End
-
+        //TODO: uncomment this after services are ready
+        //showProgress();
     }
 
     @Override
     public void onDone(int message_id, int code, Object... args) {
         displayMessage(this, "Success", Snackbar.LENGTH_LONG);
+
+        cardView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
 
         if(args.length>0) {
             Rider rider = (Rider) args[0];
@@ -80,11 +96,17 @@ public class MyAccountActivity extends BaseActivity implements OnWebServiceCallD
 
     @Override
     public void onContingencyError(int code) {
+
+        cardView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
         displayContingencyError(this, 0);
     }
 
     @Override
     public void onError(int message_id, int code, String... args) {
+
+        cardView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
         displayError(this, message_id, Snackbar.LENGTH_LONG);
     }
     @Override
@@ -106,10 +128,15 @@ public class MyAccountActivity extends BaseActivity implements OnWebServiceCallD
 
     public void logout(View view){
         AuthenticationService.logout(this);
+
         Intent intent = new Intent(this, SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         this.startActivity(intent);
     }
+
+
+
+
 
 }

@@ -13,7 +13,6 @@ import in.cakemporos.logistics.cakemporoslogistics.events.OnWebServiceCallDoneEv
 import in.cakemporos.logistics.cakemporoslogistics.web.endpoints.OrderEndPoint;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.Location;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.LocationResponse;
-import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.entities.EntityBase;
 import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.entities.Order;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -178,7 +177,7 @@ public class OrderService {
 
 
         Location location = new Location();
-        location.setLattitude(lattitude);
+        location.setLatitude(lattitude);
         location.setLongitude(longitude);
 
         Call<LocationResponse> callForSendLocation = orderEndPoint.sendLocation(Utility.getKey(activity).getAccess(), location);

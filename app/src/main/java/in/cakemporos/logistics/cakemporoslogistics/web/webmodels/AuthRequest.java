@@ -30,6 +30,11 @@ public class AuthRequest {
     @SerializedName("client_secret")
     private String clientSecret;
 
+    public AuthRequest(Context context) {
+        clientId = context.getString(R.string.client_id);
+        clientSecret = context.getString(R.string.client_secret);
+    }
+
     public AuthRequest(String username, String password, Context context) {
         this.username = username;
         this.password = password;

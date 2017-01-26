@@ -11,7 +11,7 @@
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/left"
+            android:src="@drawable/ic_left_arrow"
             android:padding="5dp"
             android:background="@color/white"
             android:clickable="true"
@@ -47,6 +47,7 @@
             android:layout_width="match_parent"
             android:id="@+id/ready_status"
             android:layout_margin="10dp"
+            android:buttonTint="@color/global_text"
             android:text="@string/delivered_status"
             android:checked="true"
             android:layout_height="wrap_content" />

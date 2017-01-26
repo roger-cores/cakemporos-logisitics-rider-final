@@ -4,16 +4,16 @@ package in.cakemporos.logistics.cakemporoslogistics.web.webmodels;
  * Created by roger on 9/30/2016.
  */
 public class Location {
-    private Double lattitude;
+    private Double latitude;
 
     private Double longitude;
 
-    public Double getLattitude() {
-        return lattitude;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setLattitude(Double lattitude) {
-        this.lattitude = lattitude;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
     public Double getLongitude() {

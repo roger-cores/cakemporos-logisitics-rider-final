@@ -4,9 +4,11 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
@@ -20,10 +22,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -32,6 +36,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -43,6 +48,7 @@ import in.cakemporos.logistics.cakemporoslogistics.events.OnWebServiceCallDoneEv
 import in.cakemporos.logistics.cakemporoslogistics.services.LocationService;
 import in.cakemporos.logistics.cakemporoslogistics.web.endpoints.AuthenticationEndPoint;
 import in.cakemporos.logistics.cakemporoslogistics.web.services.AuthenticationService;
+import in.cakemporos.logistics.cakemporoslogistics.web.webmodels.OTPResponse;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -56,11 +62,7 @@ import static in.cakemporos.logistics.cakemporoslogistics.utilities.FlashMessage
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, OnWebServiceCallDoneEventListener {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
-    private static final int REQUEST_LOCATION_FINE = 1;
+
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -89,7 +91,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -117,7 +118,142 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         forgotpassword_TV.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                forgotpassword_TV.setTextColor(Color.BLUE);
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                // Get the layout inflater
+                LayoutInflater inflater = getLayoutInflater();
+
+                // Inflate and set the layout for the dialog
+                // Pass null as the parent view because its going in the dialog layout
+                builder.setView(inflater.inflate(R.layout.dialog_forgot_password, null))
+                        // Add action buttons
+                        .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                //TODO: Check if username is present in db
+
+                                final AuthenticationEndPoint endPoint = retrofit.create(AuthenticationEndPoint.class);
+                                Dialog f=(Dialog)dialog;
+                                EditText userName = (EditText) f.findViewById(R.id.dialog_username);
+                                final String uName = userName.getText().toString();
+                                AuthenticationService.forgotPassword(LoginActivity.this, retrofit, endPoint, uName, new OnWebServiceCallDoneEventListener() {
+
+                                    String TAG = OnWebServiceCallDoneEventListener.class.getName();
+
+                                    @Override
+                                    public void onDone(int message_id, int code, Object... args) {
+                                        if(code == 0){
+                                            //User doesn't exist
+                                            Toast.makeText(ctx,"Error: Username does not exist",Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            //User exists
+
+                                            AlertDialog.Builder builder1 = new AlertDialog.Builder(ctx);
+                                            LayoutInflater inflater1 = getLayoutInflater();
+                                            builder1.setView(inflater1.inflate(R.layout.dialog_otp, null))
+                                                    .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            //TODO: To verify OTP
+
+                                                            Dialog f=(Dialog)dialog;
+                                                            EditText otpText = (EditText) f.findViewById(R.id.dialog_otp);
+                                                            final String input = otpText.getText().toString();
+
+                                                            AuthenticationService.verifyOtp(LoginActivity.this, retrofit, endPoint, uName, input, new OnWebServiceCallDoneEventListener() {
+                                                                @Override
+                                                                public void onDone(int message_id, int code, Object... args) {
+                                                                    if(code == 0){
+                                                                        Toast.makeText(ctx,"Error: Invalid OTP",Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                    else {
+                                                                        final OTPResponse otpResponse = (OTPResponse) args[0];
+                                                                        AlertDialog.Builder builder2 = new AlertDialog.Builder(ctx);
+                                                                        LayoutInflater inflater2 = getLayoutInflater();
+                                                                        builder2.setView(inflater2.inflate(R.layout.dialog_change_password, null))
+                                                                                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener(){
+                                                                                    @Override
+                                                                                    public void onClick(DialogInterface dialog, int id) {
+
+                                                                                        //TODO: Update the new password
+
+                                                                                        Dialog f=(Dialog)dialog;
+                                                                                        EditText passText = (EditText) f.findViewById(R.id.dialog_new_password1_et);
+                                                                                        final String password = passText.getText().toString();
+
+                                                                                        AuthenticationService.changeForgottenPassword(LoginActivity.this, retrofit, endPoint, uName, otpResponse.getSessionId(), password, new OnWebServiceCallDoneEventListener() {
+                                                                                            @Override
+                                                                                            public void onDone(int message_id, int code, Object... args) {
+                                                                                                Toast.makeText(ctx,"Password has been changed successfully",Toast.LENGTH_SHORT).show();
+                                                                                            }
+
+                                                                                            @Override
+                                                                                            public void onContingencyError(int code) {
+                                                                                                Log.d(TAG, LoginActivity.this.getString(R.string.error_contingency));
+                                                                                            }
+
+                                                                                            @Override
+                                                                                            public void onError(int message_id, int code, String... args) {
+                                                                                                Log.d(TAG, LoginActivity.this.getString(message_id));
+                                                                                            }
+                                                                                        });
+
+
+                                                                                    }
+                                                                                })
+                                                                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                                                                                    public void onClick(DialogInterface dialog, int id) {
+                                                                                        dialog.dismiss();
+                                                                                    }
+                                                                                });
+                                                                        AlertDialog alertDialog2=builder2.create();
+                                                                        alertDialog2.show();
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onContingencyError(int code) {
+                                                                    Log.d(TAG, LoginActivity.this.getString(R.string.error_contingency));
+                                                                }
+
+                                                                @Override
+                                                                public void onError(int message_id, int code, String... args) {
+                                                                    Log.d(TAG, LoginActivity.this.getString(message_id));
+                                                                }
+                                                            });
+
+
+                                                        }
+                                                    })
+                                                    .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                            AlertDialog alertDialog1=builder1.create();
+                                            alertDialog1.show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onContingencyError(int code) {
+                                        Log.d(TAG, LoginActivity.this.getString(R.string.error_contingency));
+                                    }
+
+                                    @Override
+                                    public void onError(int message_id, int code, String... args) {
+                                        Log.d(TAG, LoginActivity.this.getString(message_id));
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog alertDialog=builder.create();
+                alertDialog.show();
             }
         });
 
@@ -139,48 +275,48 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
+//    private void populateAutoComplete() {
+//        if (!mayRequestContacts()) {
+//            return;
+//        }
+//
+//        getLoaderManager().initLoader(0, null, this);
+//    }
 
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
+//    private boolean mayRequestContacts() {
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+//            return true;
+//        }
+//        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+//            return true;
+//        }
+//        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
+//            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+//                    .setAction(android.R.string.ok, new OnClickListener() {
+//                        @Override
+//                        @TargetApi(Build.VERSION_CODES.M)
+//                        public void onClick(View v) {
+//                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+//                        }
+//                    });
+//        } else {
+//            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+//        }
+//        return false;
+//    }
 
     /**
      * Callback received when a permissions request has been completed.
      */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+//                                           @NonNull int[] grantResults) {
+//        if (requestCode == REQUEST_READ_CONTACTS) {
+//            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                populateAutoComplete();
+//            }
+//        }
+//    }
 
 
     /**

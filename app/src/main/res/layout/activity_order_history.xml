@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey">
+    android:background="@color/global_bg">
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,7 +11,7 @@
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/left"
+            android:src="@drawable/ic_left_arrow"
             android:padding="5dp"
             android:background="@color/white"
             android:clickable="true"
@@ -34,14 +34,30 @@
         android:orientation="vertical"
         android:background="@color/white"
         android:id="@+id/linear_layout_order_history"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
+        <TextView
+            android:id="@+id/order_history_blank_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:gravity="center"
+            android:text="No Bookings Assigned"
+            android:visibility="gone"
+            />
         <android.support.v7.widget.RecyclerView
             android:paddingTop="500dp"
             android:id="@+id/my_recycler_view_order_history"
             android:scrollbars="vertical"
-            android:background="@color/grey"
+            android:background="@color/global_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+        <ProgressBar
+            android:id="@+id/activity_order_history_progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"/>
 
     </LinearLayout></LinearLayout>
